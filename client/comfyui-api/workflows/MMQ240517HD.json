@@ -1,0 +1,429 @@
+{
+  "10": {
+    "inputs": {
+      "seed": 965866852747471,
+      "steps": 1,
+      "cfg": 1,
+      "sampler_name": "lcm",
+      "scheduler": "karras",
+      "denoise": 0.7000000000000001,
+      "preview_method": "auto",
+      "vae_decode": "true",
+      "model": [
+        "12",
+        0
+      ],
+      "positive": [
+        "12",
+        1
+      ],
+      "negative": [
+        "12",
+        2
+      ],
+      "latent_image": [
+        "22",
+        0
+      ],
+      "optional_vae": [
+        "23",
+        0
+      ]
+    },
+    "class_type": "KSampler (Efficient)",
+    "_meta": {
+      "title": "K采样器(效率)"
+    }
+  },
+  "11": {
+    "inputs": {
+      "instantid_file": "ip-adapter.bin"
+    },
+    "class_type": "InstantIDModelLoader",
+    "_meta": {
+      "title": "InstnatID模型加载器"
+    }
+  },
+  "12": {
+    "inputs": {
+      "ip_weight": 1,
+      "cn_strength": 0.9,
+      "start_at": 0,
+      "end_at": 1,
+      "noise": 0.5,
+      "combine_embeds": "average",
+      "instantid": [
+        "11",
+        0
+      ],
+      "insightface": [
+        "13",
+        0
+      ],
+      "control_net": [
+        "14",
+        0
+      ],
+      "image": [
+        "34",
+        0
+      ],
+      "model": [
+        "41",
+        0
+      ],
+      "positive": [
+        "18",
+        0
+      ],
+      "negative": [
+        "19",
+        0
+      ],
+      "image_kps": [
+        "46",
+        0
+      ]
+    },
+    "class_type": "ApplyInstantIDAdvanced",
+    "_meta": {
+      "title": "应用InstantID(高级)"
+    }
+  },
+  "13": {
+    "inputs": {
+      "provider": "CUDA"
+    },
+    "class_type": "InstantIDFaceAnalysis",
+    "_meta": {
+      "title": "InstantID面部分析"
+    }
+  },
+  "14": {
+    "inputs": {
+      "control_net_name": "diffusion_pytorch_model.safetensors"
+    },
+    "class_type": "ControlNetLoader",
+    "_meta": {
+      "title": "ControlNet加载器"
+    }
+  },
+  "15": {
+    "inputs": {
+      "image": "赵 (1) (1).jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "加载图像"
+    }
+  },
+  "16": {
+    "inputs": {
+      "image": "ComfyUI_00181_ (2).png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "加载图像"
+    }
+  },
+  "17": {
+    "inputs": {
+      "ckpt_name": "DreamShaper XL v2.1 Turbo 闪电_v2.1 Turbo.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Checkpoint加载器(简易)"
+    }
+  },
+  "18": {
+    "inputs": {
+      "text": "big eyes,eyes see front，asian，beautiful face",
+      "clip": [
+        "17",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP文本编码器"
+    }
+  },
+  "19": {
+    "inputs": {
+      "text": "Bad quality, low resolution, cropping, monochrome, black and white",
+      "clip": [
+        "17",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP文本编码器"
+    }
+  },
+  "20": {
+    "inputs": {
+      "images": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "预览图像"
+    }
+  },
+  "21": {
+    "inputs": {
+      "pixels": [
+        "46",
+        0
+      ],
+      "vae": [
+        "23",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE编码"
+    }
+  },
+  "22": {
+    "inputs": {
+      "samples": [
+        "21",
+        0
+      ],
+      "mask": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "SetLatentNoiseMask",
+    "_meta": {
+      "title": "设置Latent噪波遮罩"
+    }
+  },
+  "23": {
+    "inputs": {
+      "vae_name": "sdxl_vae_fp16fix.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "VAE加载器"
+    }
+  },
+  "24": {
+    "inputs": {
+      "expand": 15,
+      "tapered_corners": false,
+      "mask": [
+        "31",
+        1
+      ]
+    },
+    "class_type": "GrowMask",
+    "_meta": {
+      "title": "遮罩扩展"
+    }
+  },
+  "25": {
+    "inputs": {
+      "weight": 0.8,
+      "weight_type": "style transfer",
+      "combine_embeds": "concat",
+      "start_at": 0,
+      "end_at": 1,
+      "embeds_scaling": "V only",
+      "model": [
+        "26",
+        0
+      ],
+      "ipadapter": [
+        "26",
+        1
+      ],
+      "image": [
+        "46",
+        0
+      ],
+      "attn_mask": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "IPAdapterAdvanced",
+    "_meta": {
+      "title": "应用IPAdapter(高级)"
+    }
+  },
+  "26": {
+    "inputs": {
+      "preset": "PLUS FACE (portraits)",
+      "model": [
+        "17",
+        0
+      ]
+    },
+    "class_type": "IPAdapterUnifiedLoader",
+    "_meta": {
+      "title": "IPAdapter加载器"
+    }
+  },
+  "31": {
+    "inputs": {
+      "prompt": "face",
+      "threshold": 0.55,
+      "sam_model": [
+        "32",
+        0
+      ],
+      "grounding_dino_model": [
+        "33",
+        0
+      ],
+      "image": [
+        "46",
+        0
+      ]
+    },
+    "class_type": "GroundingDinoSAMSegment (segment anything)",
+    "_meta": {
+      "title": "G-DinoSAM语义分割"
+    }
+  },
+  "32": {
+    "inputs": {
+      "model_name": "sam_vit_b (375MB)"
+    },
+    "class_type": "SAMModelLoader (segment anything)",
+    "_meta": {
+      "title": "SAM模型加载器"
+    }
+  },
+  "33": {
+    "inputs": {
+      "model_name": "GroundingDINO_SwinT_OGC (694MB)"
+    },
+    "class_type": "GroundingDinoModelLoader (segment anything)",
+    "_meta": {
+      "title": "G-Dino模型加载器"
+    }
+  },
+  "34": {
+    "inputs": {
+      "prompt": "face",
+      "threshold": 0.55,
+      "sam_model": [
+        "32",
+        0
+      ],
+      "grounding_dino_model": [
+        "33",
+        0
+      ],
+      "image": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "GroundingDinoSAMSegment (segment anything)",
+    "_meta": {
+      "title": "G-DinoSAM语义分割"
+    }
+  },
+  "41": {
+    "inputs": {
+      "weight": 1,
+      "weight_faceidv2": 1,
+      "weight_type": "linear",
+      "combine_embeds": "concat",
+      "start_at": 0,
+      "end_at": 1,
+      "embeds_scaling": "V only",
+      "model": [
+        "43",
+        0
+      ],
+      "ipadapter": [
+        "43",
+        1
+      ],
+      "image": [
+        "34",
+        0
+      ],
+      "attn_mask": [
+        "34",
+        1
+      ],
+      "insightface": [
+        "42",
+        0
+      ]
+    },
+    "class_type": "IPAdapterFaceID",
+    "_meta": {
+      "title": "应用IPAdapterFaceID"
+    }
+  },
+  "42": {
+    "inputs": {
+      "provider": "CUDA"
+    },
+    "class_type": "IPAdapterInsightFaceLoader",
+    "_meta": {
+      "title": "IPAdapterInsightFace模型加载器"
+    }
+  },
+  "43": {
+    "inputs": {
+      "preset": "FACEID PLUS V2",
+      "lora_strength": 0.6,
+      "provider": "CUDA",
+      "model": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "IPAdapterUnifiedLoaderFaceID",
+    "_meta": {
+      "title": "IPAdapterFaceID加载器"
+    }
+  },
+  "45": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "10",
+        5
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  },
+  "46": {
+    "inputs": {
+      "upscale_model": "ESRGAN\\ESRGAN_4x.pth",
+      "mode": "rescale",
+      "rescale_factor": 2,
+      "resize_width": 1024,
+      "resampling_method": "lanczos",
+      "supersample": "true",
+      "rounding_modulus": 8,
+      "image": [
+        "16",
+        0
+      ]
+    },
+    "class_type": "CR Upscale Image",
+    "_meta": {
+      "title": "放大图像"
+    }
+  }
+}

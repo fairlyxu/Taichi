@@ -1,0 +1,247 @@
+{
+  "17": {
+    "inputs": {
+      "image": "ComfyUI_temp_xmysz_00011_ (1).png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "加载图像"
+    }
+  },
+  "20": {
+    "inputs": {
+      "ip_weight": 0.8,
+      "cn_strength": 0.9,
+      "start_at": 0,
+      "end_at": 1,
+      "noise": 0,
+      "combine_embeds": "average",
+      "instantid": [
+        "21",
+        0
+      ],
+      "insightface": [
+        "22",
+        0
+      ],
+      "control_net": [
+        "28",
+        0
+      ],
+      "image": [
+        "17",
+        0
+      ],
+      "model": [
+        "26",
+        0
+      ],
+      "positive": [
+        "23",
+        0
+      ],
+      "negative": [
+        "25",
+        0
+      ],
+      "image_kps": [
+        "52",
+        0
+      ]
+    },
+    "class_type": "ApplyInstantIDAdvanced",
+    "_meta": {
+      "title": "应用InstantID(高级)"
+    }
+  },
+  "21": {
+    "inputs": {
+      "instantid_file": "ip-adapter.bin"
+    },
+    "class_type": "InstantIDModelLoader",
+    "_meta": {
+      "title": "InstnatID模型加载器"
+    }
+  },
+  "22": {
+    "inputs": {
+      "provider": "CUDA"
+    },
+    "class_type": "InstantIDFaceAnalysis",
+    "_meta": {
+      "title": "InstantID面部分析"
+    }
+  },
+  "23": {
+    "inputs": {
+      "text": "Man,front view, on the beach by the sea, sun, sand,  high quality, detailed, high resolution, 4k ",
+      "clip": [
+        "26",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP文本编码器"
+    }
+  },
+  "25": {
+    "inputs": {
+      "text": "NSFW, (worst quality, low quality: 1.2), zombie, horror, distorted, naked,no glasses",
+      "clip": [
+        "26",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP文本编码器"
+    }
+  },
+  "26": {
+    "inputs": {
+      "ckpt_name": "DreamShaper XL v2.1 Turbo 闪电_v2.1 Turbo.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Checkpoint加载器(简易)"
+    }
+  },
+  "28": {
+    "inputs": {
+      "control_net_name": "diffusion_pytorch_model.safetensors"
+    },
+    "class_type": "ControlNetLoader",
+    "_meta": {
+      "title": "ControlNet加载器"
+    }
+  },
+  "42": {
+    "inputs": {
+      "samples": [
+        "50",
+        1
+      ],
+      "vae": [
+        "50",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE解码"
+    }
+  },
+  "43": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "42",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  },
+  "45": {
+    "inputs": {
+      "model": [
+        "26",
+        0
+      ],
+      "clip": [
+        "26",
+        1
+      ],
+      "vae": [
+        "26",
+        2
+      ],
+      "positive": [
+        "23",
+        0
+      ],
+      "negative": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "ToBasicPipe",
+    "_meta": {
+      "title": "到基础束"
+    }
+  },
+  "46": {
+    "inputs": {
+      "width": 1024,
+      "height": 1536,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "空Latent"
+    }
+  },
+  "47": {
+    "inputs": {
+      "basic_pipe": [
+        "45",
+        0
+      ],
+      "model": [
+        "20",
+        0
+      ],
+      "positive": [
+        "20",
+        1
+      ],
+      "negative": [
+        "20",
+        2
+      ]
+    },
+    "class_type": "EditBasicPipe",
+    "_meta": {
+      "title": "编辑基础束"
+    }
+  },
+  "50": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 679460513464326,
+      "steps": 9,
+      "cfg": 3,
+      "sampler_name": "lcm",
+      "scheduler": "karras",
+      "start_at_step": 0,
+      "end_at_step": 10000,
+      "return_with_leftover_noise": false,
+      "basic_pipe": [
+        "47",
+        0
+      ],
+      "latent_image": [
+        "46",
+        0
+      ]
+    },
+    "class_type": "ImpactKSamplerAdvancedBasicPipe",
+    "_meta": {
+      "title": "K采样器(高级节点束)"
+    }
+  },
+  "52": {
+    "inputs": {
+      "image": "mmq_ceshi1024 (1).jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "加载图像"
+    }
+  }
+}
