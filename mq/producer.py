@@ -6,7 +6,6 @@ class Producer:
     def __init__(self):
         self.exchange = SERVER_CONFIG.MQConfig.EXCHANGE
         self.queue = SERVER_CONFIG.MQConfig.QUEUE
-
         self.connection = pika.BlockingConnection()
         # declaring the credentials needed for connection like host, port, username, password, exchange etc
         credentials = pika.PlainCredentials(SERVER_CONFIG.MQConfig.USERNAME, SERVER_CONFIG.MQConfig.PASSWORD)

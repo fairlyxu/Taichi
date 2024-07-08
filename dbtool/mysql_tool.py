@@ -7,17 +7,25 @@ class MysqlTool:
     def __init__(self):
         # 创建数据库连接
         self.connect = pool.connection()
+        self.cursor = self.connect.cursor()
         self.dbname = pool.database
 
     # 查询数据库的版本
     def find_version(self):
-        # 使用 cursor() 方法创建一个游标对象 cursor
-        cursor = self.connect.cursor()
-        # 使用 execute()  方法执行 SQL 查询
-        cursor.execute("SELECT VERSION()")
+        self.cursor.execute("SELECT VERSION()")
         # 使用 fetchone() 方法获取单条数据.
-        data = cursor.fetchone()
+        data = self.cursor.fetchone()
         print("Database version : %s " % data)
+
+    def __close__(self):
+        """
+        A method used to close connection of mysql.
+        :param conn:
+        :param cursor:
+        :return:
+        """
+        self.cursor.close()
+        self.connect.close()
 
     # 数据库的查询操作
     def get_task_by_requestid(self, requestid):
@@ -30,6 +38,8 @@ class MysqlTool:
         except:
             # 如果发生错误则回滚
             self.connect.rollback()
+
+        self.__close__()
 
     # 数据库的查询操作
     def get_task_by_status(self, status,num=5):
@@ -47,6 +57,8 @@ class MysqlTool:
             traceback.print_exc()
             print("get_task_by_status error~:", e)
 
+        self.__close__()
+
 
     def create_task(self, obj):
         # 使用cursor()方法获取操作游标
@@ -61,6 +73,8 @@ class MysqlTool:
             self.connect.commit()
         except:
             self.connect.rollback()
+
+        self.__close__()
         print("插入成功！！！！")
 
     # 数据库更新操作

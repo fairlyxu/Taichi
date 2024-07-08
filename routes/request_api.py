@@ -1,20 +1,16 @@
 
-import pymysql
 import traceback
+import json
+import g as G
 from flask import jsonify, abort, request, Blueprint
-from dbtool.mysql_tool import MysqlTool
-from dbutils.pooled_db import PooledDB
-REQUEST_API = Blueprint('request_api', __name__)
-DBNAME="SD_TASK_EXCHAGE"
-from dbtool.db_pool import pool
-dbtool = MysqlTool(pool,DBNAME)
 
+REQUEST_API = Blueprint('request_api', __name__)
 def get_blueprint():
     """Return the blueprint for the main app module"""
     return REQUEST_API
 
 @REQUEST_API.route('/generate', methods=['POST'])
-def generate(producer):
+def generate():
     output = []
     code = 100
     msg = "排队中"
@@ -31,7 +27,7 @@ def generate(producer):
 
     try:
         #requestid,image,image2, model_param,cnt,status
-        obj = dbtool.get_task_by_requestid(data.get('requestid'))
+        obj = G.dbtool.get_task_by_requestid(data.get('requestid'))
         print("obj:",obj)
         if (obj is None):
             new_task = {}
@@ -40,12 +36,13 @@ def generate(producer):
             new_task["image2"] = data.get('image2')
             new_task["cnt"] = cnt
             new_task["model_param"] = data.get('model_param')
-            dbtool.create_task(new_task)
+            G.dbtool.create_task(new_task)
             #并且往消息队列中塞一条通知
-            producer.run(message="")
-
+            obj_str = json.dumps(new_task)
+            print(obj)
+            G.producer.run(message=obj_str)
         else:
-            tmp_obj = dbtool.get_task_by_requestid(data.get('requestid'))
+            tmp_obj = G.dbtool.get_task_by_requestid(data.get('requestid'))
             obj = tmp_obj
             if (obj["res_img"] and len(obj["res_img"]) >0):
                 output = obj["res_img"].split(',')
@@ -71,8 +68,8 @@ def get_task():
     code = 200
     tasks = []
     try:
-        dbtool = MysqlTool(pool,DBNAME)
-        tasks = dbtool.get_task_by_status(1) #[]
+        #dbtool = MysqlTool(pool,DBNAME)
+        tasks = G.dbtool.get_task_by_status(1) #[]
         #print("/v2/get_task:", task)
         if tasks is None:
             code = -1
@@ -80,7 +77,7 @@ def get_task():
         else:
             for task in tasks:
                 task['status'] = 0
-            dbtool.update_tasks(tasks)
+            G.dbtool.update_tasks(tasks)
     except Exception:
         traceback.format_exc()
         code = -1
@@ -105,7 +102,7 @@ def update_task():
     if not task.get('requestid'):
         abort(400)
     try:
-        dbtool.update_task(task)
+        G.dbtool.update_task(task)
     except:
         traceback.format_exc()
         code = -1
