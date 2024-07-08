@@ -18,7 +18,7 @@ def design(input_img_url, style_img_url,positve_prompt='',negative_prompt=''):
     img_list = []
     try:
         #download file
-        input_img,style_img =  get_input_file(input_img_url,style_img_url)
+        input_img,style_img = get_input_file(input_img_url,style_img_url)
         input_img = 'd35d33271d2c784838e4f54fe521028ed2d1e73f19aa1d-n7F3Gj.png',
         style_img = 'ComfyUI_00173_.png'
         res_list = prompt_to_image_mmq(workflow, input_img=input_img, style_img=style_img,
