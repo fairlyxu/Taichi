@@ -1,11 +1,12 @@
 CREATE DATABASE AIGC_TASK;
+
 CREATE TABLE `SD_TASK_EXCHAGE` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `requestid` varchar(128) NOT NULL,
   `image` varchar(1024) NOT NULL COMMENT '输入图像',
   `image2` varchar(1024) NOT NULL COMMENT '风格图像',
-  `model_param` text DEFAULT NULL COMMENT '全局参数，json格式',
-  `cnt` varchar(128) NOT NULL COMMENT '生成张数',
+  `model_param` text COMMENT '全局参数，json格式',
+  `cnt` int NOT NULL COMMENT '生成张数',
   `res_img` varchar(1024) DEFAULT NULL COMMENT '输出图像',
   `status` tinyint(1) DEFAULT '1' COMMENT '-1=失败，0=正在处理，1=排队中，2=生成成功',
   `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -14,4 +15,4 @@ CREATE TABLE `SD_TASK_EXCHAGE` (
   `extra1` varchar(1024) DEFAULT NULL,
   `extra2` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=530 DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB AUTO_INCREMENT=737 DEFAULT CHARSET=utf8mb4

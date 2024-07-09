@@ -2,6 +2,8 @@
 import traceback
 import pymysql
 from dbtool.db_pool import pool
+
+print(pool)
 class MysqlTool:
     # 初始化变量
     def __init__(self):
@@ -98,9 +100,7 @@ class MysqlTool:
         sql = "UPDATE " + self.dbname + " SET " + sql_con + " WHERE requestid = '%s'" %(obj['requestid'])
         print("update sql: ",sql)
         try:
-            # 执行SQL语句
             cursor.execute(sql)
-            # 提交到数据库执行
             self.connect.commit()
         except:
             # 发生错误时回滚

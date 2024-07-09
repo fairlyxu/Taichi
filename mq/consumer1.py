@@ -2,19 +2,18 @@
 import pika
 #declaring the credentials needed for connection like host, port, username, password, exchange etc
 credentials = pika.PlainCredentials('wangyifan','dhYurts@7hh')
+
+QUEUE_NAME = "mmq"
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='47.116.76.13', port='5672', credentials= credentials))
-channel = connection.channel()
-channel.exchange_declare('test', durable=True, exchange_type='topic')
-#defining callback functions responding to corresponding queue callbacks
-def callbackFunctionForQueueA(ch,method,properties,body):
-    print('Got a message from Queue A: ', body)
-def callbackFunctionForQueueB(ch,method,properties,body):
-    print('Got a message from Queue B: ', body)
-def callbackFunctionForQueueC(ch,method,properties,body):
-    print('Got a message from Queue C: ', body)
-#Attaching consumer callback functions to respective queues that we wrote above
-channel.basic_consume(queue='A', on_message_callback=callbackFunctionForQueueA, auto_ack=True)
-channel.basic_consume(queue='B', on_message_callback=callbackFunctionForQueueB, auto_ack=True)
-channel.basic_consume(queue='C', on_message_callback=callbackFunctionForQueueC, auto_ack=True)
-#this will be command for starting the consumer session
+
+channel = connection.channel()  # 频道对象 利用它可以操作队列内消息的生产和消费
+channel.queue_declare(queue=QUEUE_NAME)  # 声明一个消息队列，队列名称为scrape
+
+
+# 从队列获取数据
+def getData(ch, method, properties, body):
+    print(f"得到{body}")
+
+
+channel.basic_consume(queue=QUEUE_NAME, auto_ack=True, on_message_callback=getData)  # 从消息队列中取出数据，用到basic_consume
 channel.start_consuming()

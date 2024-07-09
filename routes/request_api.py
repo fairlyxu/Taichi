@@ -1,9 +1,8 @@
-
 import traceback
 import json
-import g as G
 from flask import jsonify, abort, request, Blueprint
-
+from dbtool.sql_helper import sqlhelper
+from mq.producer import producer
 REQUEST_API = Blueprint('request_api', __name__)
 def get_blueprint():
     """Return the blueprint for the main app module"""
@@ -27,7 +26,7 @@ def generate():
 
     try:
         #requestid,image,image2, model_param,cnt,status
-        obj = G.dbtool.get_task_by_requestid(data.get('requestid'))
+        obj = sqlhelper.get_task_by_requestid(data.get('requestid'))
         print("obj:",obj)
         if (obj is None):
             new_task = {}
@@ -36,20 +35,21 @@ def generate():
             new_task["image2"] = data.get('image2')
             new_task["cnt"] = cnt
             new_task["model_param"] = data.get('model_param')
-            G.dbtool.create_task(new_task)
+            sqlhelper.create_task(new_task)
             #并且往消息队列中塞一条通知
             obj_str = json.dumps(new_task)
-            print(obj)
-            G.producer.run(message=obj_str)
+            print(obj_str)
+            producer.run(message=obj_str)
         else:
-            tmp_obj = G.dbtool.get_task_by_requestid(data.get('requestid'))
+            tmp_obj = sqlhelper.get_task_by_requestid(data.get('requestid'))
             obj = tmp_obj
             if (obj["res_img"] and len(obj["res_img"]) >0):
                 output = obj["res_img"].split(',')
                 msg = "生成成功"
                 code = 200
-    except :
-        traceback.format_exc()
+    except Exception as e:
+        print("error:", e)
+        traceback.print_exc()
         code = -1
         msg = "查询失败"
 
@@ -69,7 +69,7 @@ def get_task():
     tasks = []
     try:
         #dbtool = MysqlTool(pool,DBNAME)
-        tasks = G.dbtool.get_task_by_status(1) #[]
+        tasks = sqlhelper.get_task_by_status(1) #[]
         #print("/v2/get_task:", task)
         if tasks is None:
             code = -1
@@ -77,7 +77,7 @@ def get_task():
         else:
             for task in tasks:
                 task['status'] = 0
-            G.dbtool.update_tasks(tasks)
+            sqlhelper.update_tasks(tasks)
     except Exception:
         traceback.format_exc()
         code = -1
@@ -102,7 +102,7 @@ def update_task():
     if not task.get('requestid'):
         abort(400)
     try:
-        G.dbtool.update_task(task)
+        sqlhelper.update_task(task)
     except:
         traceback.format_exc()
         code = -1

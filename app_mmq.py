@@ -1,14 +1,9 @@
-"""A Python Flask REST API BoilerPlate (CRUD) Style"""
-
 import argparse
 import os
 from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 from routes import request_api
-from mq.producer import Producer
-from dbtool.mysql_tool import MysqlTool
-import g as G
 APP = Flask(__name__)
 @APP.before_request
 def load_produce_request():
@@ -49,8 +44,8 @@ def init():
     APP.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
     APP.register_blueprint(request_api.get_blueprint())
     APP.logger.setLevel('ERROR')
-    G.produce = Producer()
-    G.dbtool = MysqlTool()
+    #G.produce = Producer()
+    #G.dbtool = MysqlTool()
 
     return APP
 
