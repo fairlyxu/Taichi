@@ -24,11 +24,19 @@ class Producer:
 
 producer = Producer()
 i=0
+
+import json
 while True:
     i+=1
-    message = "name : "+ str(i )
-    producer.run(message)
-    time.sleep(2)
+    new_task = {}
+    new_task["requestid"] = 'requestid= ' + str(i )
+    new_task["image"] = 'image'
+    new_task["image2"] = 'image2'
+    new_task["cnt"] = 1
+    new_task["model_param"] = 'model_param'
+    obj_str = json.dumps(new_task)
+    producer.run(obj_str)
+    time.sleep(10)
 
 
 
