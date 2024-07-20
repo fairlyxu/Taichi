@@ -1,12 +1,12 @@
 [Unit]
-Description=AI Room Task Server
+Description=AI  Task Server
 After=network.target syslog.target
 
 [Service]
-WorkingDirectory=/data/sd_api_server_mmq
+EnvironmentFile=/etc/systemd/system/mmqload.conf
 User=root
 # 运行jar包的指令
-ExecStart=/usr/bin/python3 /data/sd_api_server_mmq/app_mmq.py
+ExecStart=/usr/bin/python3 /data/Taichi/app_mmq.py
 # 收到正常停止命令时不自动重启(systemctl stop 时不会自动重启)
 SuccessExitStatus=143
 # 在服务失败时自动重启
@@ -17,3 +17,7 @@ RestartSec=10
 StartLimitInterval=10
 # 间隔时间内的最大重启尝试次数
 StartLimitBurst=3
+
+
+[Install]
+WantedBy=multi-user.target
