@@ -1,14 +1,33 @@
-# 消息队列rabbitmq-生产者
-import pika
+import http.client
+import json
+import time
 
+conn = http.client.HTTPConnection("47.116.76.13:5001")
 
+json_data = {
+	"requestid": "8eaaaaadddssssdddd",
+	"image": "https://qiniu.aigcute.com/photography_ai/20240722/03a0e4ecd80b41849757bee86e46b00c.jpeg",
+	"image2": "https://qiniu.aigcute.com/photography_ai/20240516/c04931b0cb99498c86b9034476db8381.png",
+	"cnt": 1,
+	"model_param": {},
+	"custom_param":{}}
+headers = {
+    'Accept': "*/*",
+    'Accept-Encoding': "gzip, deflate, br",
+    'User-Agent': "PostmanRuntime-ApipostRuntime/1.1.0",
+    'Connection': "keep-alive",
+    'Content-Type': "application/json"
+    }
 
-QUEUE_NAME = "mmq"
-credentials = pika.PlainCredentials("wangyifan", "dhYurts@7hh")
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='47.116.76.13', credentials=credentials))
-channel = connection.channel()  # 频道对象 利用它可以操作队列内消息的生产和消费
-channel.queue_declare(queue=QUEUE_NAME)  # 声明一个消息队列，队列名称为scrape
+i = 0
+while True:
+    json_data["requestid"] = "s" + str(i)
+    payload = json.dumps(json_data)
+    conn.request("POST", "/generate", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
 
+    time.sleep(10)
+    i+=1
 
-channel.basic_publish(exchange='', routing_key=QUEUE_NAME, body='Hello,Rabbitmq!')  # 将数据存储到消
+    print(data.decode("utf-8"))

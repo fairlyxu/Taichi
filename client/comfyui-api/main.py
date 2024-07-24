@@ -1,3 +1,4 @@
+import time
 
 from utils.actions.prompt_to_image import *
 from utils.actions.prompt_image_to_image import *
@@ -9,7 +10,7 @@ import os
 import pika
 import json
 import traceback
-SERVER_HOST = os.environ.get('SERVER_HOST','SERVER_HOST')
+SERVER_HOST = os.environ.get('SERVER_HOST','http://47.116.76.13:5001/')
 task_url = SERVER_HOST + "get_tasks"
 update_task_url = SERVER_HOST + "update_task"
 headers = {
@@ -34,8 +35,6 @@ def design(input_img_url, style_img_url,positve_prompt='',negative_prompt=''):
         print(f"An error occurred: {e}")
         exit_program()
         return [], False
-
-
 
 def exit_program():
     print("Exiting the program...")
@@ -62,12 +61,11 @@ def callbackFunctionForProcess(ch, method, properties, body):
                 print("~~~~~~,res_img_list", task['res_img'])
             else:
                 task['status'] = 1
-        else :
+        else:
             task['status'] = -1
         task['retry'] = retry + 1
         update_response = requests.request("POST", update_task_url, json=task, headers=headers)
         print("update_task:", update_response)
-
 
 def start_task():
     credentials = pika.PlainCredentials(os.environ.get('MQ_NAME', 'wangyifan'),
