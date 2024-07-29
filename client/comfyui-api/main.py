@@ -71,7 +71,7 @@ def start_task():
     credentials = pika.PlainCredentials(os.environ.get('MQ_NAME', 'wangyifan'),
                                         os.environ.get('MQ_PASS', 'dhYurts@7hh'))
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=os.environ.get('MQ_HOST', '47.116.76.13'), port='5672', credentials=credentials))
+        pika.ConnectionParameters(host=os.environ.get('MQ_HOST', '47.116.76.13'), port='5672', credentials=credentials, heartbeat=180))
     channel = connection.channel()
     channel.exchange_declare(os.environ.get('MQ_EXCHANGE', 'mmq_exchange'), durable=True, exchange_type='topic')
     channel.basic_consume(queue=os.environ.get('MQ_QUEUE', 'mmq'), on_message_callback=callbackFunctionForProcess,

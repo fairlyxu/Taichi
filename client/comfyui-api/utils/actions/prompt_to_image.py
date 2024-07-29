@@ -27,10 +27,10 @@ def prompt_to_image_mmq(workflow,input_img='',style_img='', positve_prompt='', n
     # k_sampler = [key for key, value in id_to_class_type.items() if value == 'KSampler'][0]
     # prompt.get(k_sampler)['inputs']['seed'] = generate_random_15_digit_number()
 
-    # if input_img != '':
-    #     prompt.get(image_loader_list[0])['inputs']['image'] = input_img
-    # if style_img != '':
-    #     prompt.get(image_loader_list[1])['inputs']['image'] = style_img
+    if input_img != '':
+        prompt.get(image_loader_list[0])['inputs']['image'] = input_img
+    if style_img != '':
+        prompt.get(image_loader_list[1])['inputs']['image'] = style_img
 
 
     # postive_input_id = prompt.get(k_sampler)['inputs']['positive'][0]
