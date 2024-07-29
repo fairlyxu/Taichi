@@ -1,10 +1,4 @@
 '''
-@Date         : 2020-11-13 16:46:20
-@LastEditors  : Pineapple
-@LastEditTime : 2020-11-14 09:10:00
-@FilePath     : /database_pool/sqlhelper2.py
-@Blog         : https://blog.csdn.net/pineapple_C
-@Github       : https://github.com/Pineapple666
 '''
 import pymysql
 from dbutils.pooled_db import PooledDB
@@ -27,14 +21,14 @@ class SqlHelper:
             charset='utf8mb4'  # 数据库字符集
         )
 
-        self.dbname = 'SD_TASK_EXCHAGE'#SERVER_CONFIG['DBConfig'].DATABASE
+        #self.dbname = ''#SERVER_CONFIG['DBConfig'].DATABASE
 
     def get_task_by_requestid(self, requestid):
         with self as db:
             try:
-                sql = "select * from %s where requestid='%s'" %(self.dbname,requestid)
+                sql = "select * from SD_TASK_EXCHAGE where requestid='%s'" %(requestid)
                 db.cursor.execute(sql)
-                print(sql,"  \nget_task_by_requestid 查询成功！！！！")
+                print(sql," get_task_by_requestid 查询成功！！！！")
                 return db.cursor.fetchone()
             except Exception as e:
                 traceback.print_exc()
@@ -44,7 +38,7 @@ class SqlHelper:
     def get_task_by_status(self, status,num=5):
         with self as db:
             try:
-                sql= "select * from %s where status=%d limit %d" % (self.dbname, status,num)
+                sql= "select * from SD_TASK_EXCHAGE where status=%d limit %d" % (status,num)
                 db.cursor.execute(sql)
                 res = db.cursor.fetchall()
                 if res:
@@ -53,12 +47,10 @@ class SqlHelper:
                 traceback.print_exc()
                 print("get_task_by_status error~:", e)
 
-
-
     def create_task(self, obj):
         with self as db:
-            sql = f""" INSERT INTO %s (requestid,image,image2, model_param,cnt,status)
-                        VALUES('%s','%s','%s','%s',%d,1)""" % (self.dbname, obj['requestid'], obj['image'], obj['image2'], obj['model_param'],obj['cnt'])
+            sql = f""" INSERT INTO SD_TASK_EXCHAGE (requestid,image,image2, model_param,cnt,status)
+                        VALUES('%s','%s','%s',%d,1)""" % (obj['requestid'], obj['image'], obj['image2'], obj['model_param'],obj['cnt'])
             try:
                 db.cursor.execute(sql)
                 db.conn.commit()
@@ -82,7 +74,7 @@ class SqlHelper:
             if ('res_img' in obj and obj['res_img'] is not None):
                 sql_con += ", res_img = '" + obj['res_img'] + "'"
 
-            sql = "UPDATE " + self.dbname + " SET " + sql_con + " WHERE requestid = '%s'" %(obj['requestid'])
+            sql = "UPDATE SD_TASK_EXCHAGE  SET " + sql_con + " WHERE requestid = '%s'" %(obj['requestid'])
             print("update sql: ",sql)
             try:
                 db.cursor.execute(sql)

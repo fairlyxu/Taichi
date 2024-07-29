@@ -12,7 +12,7 @@ SECR_KEY = os.environ.get('SECR_KEY')
 def upload_img(file_name):
     """
     """
-    file_location = os.environ.get('OUTPUT_IMG_DIR') + '/' + file_name
+    file_location = os.environ.get('OUTPUT_IMG_DIR','C:/') + file_name
     # 指定上传空间，获取token
     q = Auth(access_key=ACC_KEY, secret_key=SECR_KEY)
     token = q.upload_token(BUCKED_NAME)
@@ -39,8 +39,8 @@ def upload_img_list(file_location_list):
 def get_input_file(input_img_url,style_img_url):
     input_img = str(uuid.uuid4().hex) + ".jpg"
     style_img = str(uuid.uuid4().hex ) + ".jpg"
-    download_image(input_img_url, os.environ.get('INPUT_IMG_DIR') + input_img)
-    download_image(style_img_url, os.environ.get('INPUT_IMG_DIR') + style_img)
+    download_image(input_img_url, os.environ.get('INPUT_IMG_DIR','C:/') + input_img)
+    download_image(style_img_url, os.environ.get('INPUT_IMG_DIR','C:/') + style_img)
     return input_img,style_img
 
 def download_image(url, save_file):
